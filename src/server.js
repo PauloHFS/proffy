@@ -1,3 +1,4 @@
+// Dados
 const proffys = [
     {
         name: "Diego Fernandes",
@@ -23,17 +24,80 @@ const proffys = [
     }
 ];
 
+const subjects = [
+    "Artes",
+    "Biologia",
+    "Ciências",
+    "Educação física",
+    "Física",
+    "Geografia",
+    "História",
+    "Matemática",
+    "Português",
+    "Química",
+];
+
+const weekdays = [
+    "Domingo",
+    "Segunda-feira",
+    "Terça-feira",
+    "Quarta-feira",
+    "Quinta-feira",
+    "Sexta-feira",
+    "Sábado"
+]
+
+//Funcionalidades
+
+function getSubject(subjectNumber) {
+    const arrayPosition = +subjectNumber - 1;
+    return subjects[arrayPosition];
+}
+
+function pageLanding(req, res) {
+    return res.render("index.html");
+}
+
+function pageStudy(req, res) {
+    const filters = req.query;
+    return res.render("study.html", { proffys, filters, subjects, weekdays });
+}
+
+function pageGiveClasses(req, res) {
+    const data = req.query;
+
+    // [name, avatar, ...]
+    const isNotEmpty = Object.keys(data).length != 0;
+    //adicionar data a lista de proffys
+    if (isNotEmpty) {
+        data.subject = getSubject(data.subject);
+
+        proffys.push(data);
+        
+        return res.redirect("/study");
+    }
+
+    return res.render("give-classes.html", { subjects, weekdays });
+}
+
+//Servidor
 const express = require('express');
 const server = express();
 
-server.use(express.static("public"))
-    .get("/", (req, res) => {
-        return res.sendFile(__dirname + "/views/index.html");
-    })
-    .get("/study", (req, res) => {
-        return res.sendFile(__dirname + "/views/study.html");
-    })
-    .get("/give-classes", (req, res) => {
-        return res.sendFile(__dirname + "/views/give-classes.html");
-    })
+//Configurando nunjucks (template engine)
+const nunjucks = require('nunjucks');
+nunjucks.configure('src/views', {
+    express: server,
+    noCache: true,
+})
+
+// Inicio e configuração do servidor
+server
+    //configura arquivos estaticos (css, scripts, imagens)
+    .use(express.static("public"))
+    //rotas da aplicação
+    .get("/", pageLanding)
+    .get("/study", pageStudy)
+    .get("/give-classes", pageGiveClasses)
+    //Start do servidor
     .listen(5500);
