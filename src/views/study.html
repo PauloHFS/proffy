@@ -44,7 +44,8 @@
                         <select name="weekday" id="weekday">
                             <option value="" disabled="" hidden="">Selecione uma opção</option>
                             {%for weekday in weekdays %}
-                            <option value="{{loop.index0}}" {{"selected" if filters.weekday == loop.index0}}>{{weekday}}</option>
+                            <option value="{{loop.index0}}" {{"selected" if filters.weekday == loop.index0}}>{{weekday}}
+                            </option>
                             {%endfor%}
                         </select>
                     </div>
@@ -58,7 +59,12 @@
         </header>
         <main>
 
-            {%for proffy in proffys %}
+            {% if proffys == {} %}
+
+            <p class="no-results">Nenhum professor encontrado com a sua pesquisa.</p>
+            {% else %}
+
+            {% for proffy in proffys %}
             <article class="teacher-item">
                 <header>
                     <img src="{{proffy.avatar}}" alt="{{proffy.name}}">
@@ -79,8 +85,9 @@
                     </a>
                 </footer>
             </article>
-            {%endfor%}
+            {% endfor %}
 
+            {% endif %}
 
         </main>
     </div>
