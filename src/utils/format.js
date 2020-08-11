@@ -21,7 +21,7 @@ const weekdays = [
     "Sábado"
 ]
 
-function getSubject(subjectNumber) {
+function getSubjects(subjectNumber) {
     const arrayPosition = +subjectNumber - 1;
     return subjects[arrayPosition];
 }
@@ -34,6 +34,6 @@ function convertHoursToMinutes(time) {
 module.exports = {
     subjects,
     weekdays,
-    getSubject,
+    getSubjects,
     convertHoursToMinutes
 }
